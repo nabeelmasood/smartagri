@@ -1,26 +1,31 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const app= express()
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
-const uri ="mongodb+srv://sardarnabeel657:nabeelmasood1122@smartagri.5moqyoo.mongodb.net/?retryWrites=true&w=majority&appName=smartagri";
+const server = http.createServer((req, res) => {
+    console.log(req.url, req.method);
+    res.setHeader("Content-Type", "text/html");
 
-async function connect(){
-    try{
-        await mongoose.connect(uri,{useNewUrlParser:true,useUnifiedTopology:true})
-        console.log("Connected to MongoDB");
-    }catch(err){
-        console.log(err);
+    let filePath = path.join(__dirname, '..', 'client', 'src'); // Adjusted path here
+
+    switch (req.url) {
+        case '/':
+            filePath = path.join(filePath, 'UserComponent','UserRegister.jsx');
+            break;
     }
-}
 
-connect();
-app.get("/api",(req,res) => {
-    
-    res.json({"users":["userOne","userTwo","userThree","userFour"]})
-
-
+    fs.readFile(filePath, (error, data) => {
+        if (error) {
+            console.error(error);
+            res.writeHead(404);
+            res.end('File not found');
+        } else {
+            res.writeHead(200);
+            res.end(data);
+        }
+    });
 });
 
-app.listen(5000,()=>{
+server.listen(5000, 'localhost', () => {
     console.log("Server is running on port 5000");
 });

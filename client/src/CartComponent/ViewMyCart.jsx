@@ -33,7 +33,7 @@ const ViewMyCart = () => {
 
   const retrieveCart = async () => {
     const response = await axios.get(
-      "http://localhost:5000/api/cart/fetch?userId=" + user.id,
+      "http://localhost:8080/api/cart/fetch?userId=" + user.id,
       {
         headers: {
           Authorization: "Bearer " + customer_jwtToken, // Replace with your actual JWT token
